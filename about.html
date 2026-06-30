@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Morphen</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* About Page Specific Styles */
+        .about-hero {
+            padding: 120px 0 80px;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(124, 58, 237, 0.1) 0%, transparent 70%);
+        }
+        .about-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .about-hero p {
+            font-size: 1.25rem;
+            color: #9ca3af;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .story-section {
+            padding: 80px 0;
+            background: #0f1115;
+        }
+        .story-content {
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+            color: #d1d5db;
+        }
+        .story-content h2 {
+            font-size: 2rem;
+            margin-bottom: 24px;
+            color: #fff;
+        }
+        .story-content p {
+            margin-bottom: 24px;
+        }
+        .team-section {
+            padding: 80px 0;
+            background: #0b0d10;
+        }
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 40px auto 0;
+        }
+        .team-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .team-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(124, 58, 237, 0.5);
+        }
+        .team-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7c3aed, #db2777);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+        .team-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .team-role {
+            color: #9ca3af;
+            font-size: 0.95rem;
+        }
+        .mission-section {
+            padding: 80px 0;
+            text-align: center;
+        }
+        .mission-box {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 40px;
+            background: rgba(124, 58, 237, 0.05);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 16px;
+        }
+        .mission-box h2 {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+        .mission-box p {
+            color: #d1d5db;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">Morphen</a>
+            <nav class="nav">
+                <a href="index.html#features" class="nav-link">Product</a>
+                <a href="index.html#pricing" class="nav-link">Pricing</a>
+                <a href="about.html" class="nav-link active">About</a>
+                <a href="index.html#faq" class="nav-link">FAQ</a>
+            </nav>
+            <div class="header-actions">
+                <a href="#" class="btn btn-outline">Sign In</a>
+                <a href="#" class="btn btn-primary">Get Started</a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- About Hero -->
+    <section class="about-hero">
+        <div class="container">
+            <h1>About Morphen</h1>
+            <p>We are redefining the way creators build and deploy digital experiences with AI-powered tools.</p>
+        </div>
+    </section>
+
+    <!-- Our Story -->
+    <section class="story-section">
+        <div class="container">
+            <div class="story-content">
+                <h2>Our Story</h2>
+                <p>Morphen was born out of a simple idea: creating high-quality digital products should be accessible to everyone, not just those with deep technical expertise or massive budgets.</p>
+                <p>Founded in 2023, our team of engineers, designers, and creators came together to build a platform that leverages the latest advancements in artificial intelligence to streamline the development process. We believe that by automating the mundane and amplifying human creativity, we can unlock a new era of innovation.</p>
+                <p>Today, Morphen powers thousands of projects worldwide, helping individuals and teams bring their visions to life faster than ever before.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission -->
+    <section class="mission-section">
+        <div class="container">
+            <div class="mission-box">
+                <h2>Our Mission</h2>
+                <p>To empower every creator with intelligent tools that simplify complexity and accelerate innovation, making the future of digital creation limitless.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team -->
+    <section class="team-section">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 2rem; color: #fff; margin-bottom: 10px;">Meet the Team</h2>
+            <p style="text-align: center; color: #9ca3af; margin-bottom: 40px;">The minds behind the magic</p>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">M</div>
+                    <div class="team-name">Maria Vargas</div>
+                    <div class="team-role">Founder & CEO</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">A</div>
+                    <div class="team-name">Alex Chen</div>
+                    <div class="team-role">CTO</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">S</div>
+                    <div class="team-name">Sarah Johnson</div>
+                    <div class="team-role">Head of Design</div>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">D</div>
+                    <div class="team-name">David Kim</div>
+                    <div class="team-role">Lead Engineer</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer CTA -->
+    <section class="footer-cta">
+        <div class="container">
+            <h2>Ready to transform your workflow?</h2>
+            <p>Join thousands of creators who are already building the future with Morphen.</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary btn-lg">Start Free Trial</a>
+                <a href="#" class="btn btn-outline btn-lg">Contact Sales</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">Morphen</a>
+                    <p>Empowering creators with AI-driven tools for the next generation of digital products.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Twitter"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"></path></svg></a>
+                        <a href="#" aria-label="GitHub"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-1.334-.452-1.139-1.065-1.412-1.065-1.412-.872-.593.066-.581.066-.581.965.068 1.472.993 1.472.993.859 1.469 2.25 1.044 2.802.794.087-.62.332-1.044.604-1.283-2.116-.241-4.342-1.059-4.342-1.059-.362-.915-.879-1.553-.879-1.553-.719-.492.055-.481.055-.481.794.056 1.212.819 1.212.819.709 1.215 1.868.865 2.325.663.072-.517.277-.865.502-1.063-1.765-.201-3.62-.883-3.62-.883-.202-.05-.405-.101-.607-.152-.202-.051-.404-.102-.606-.153-.404-.102-.807-.204-1.21-.306-.403-.102-.806-.204-1.209-.306-.202-.051-.404-.102-.606-.153-.202-.051-.404-.102-.606-.153-.403-.102-.806-.204-1.209-.306-.403-.102-.806-.204-1.209-.306-.202-.051-.404-.102-.606-.153-.202-.051-.404-.102-.606-.153-.403-.102-.806-.204-1.209-.306-.403-.102-.806-.204-1.209-.306z"/></svg></a>
+                        <a href="#" aria-label="LinkedIn"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="index.html#features">Features</a></li>
+                        <li><a href="index.html#pricing">Pricing</a></li>
+                        <li><a href="#">Integrations</a></li>
+                        <li><a href="#">Changelog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Community</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Status</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Morphen Inc. All rights reserved.</p>
+                <div class="legal-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
