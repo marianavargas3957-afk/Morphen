@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Morphen – Turn designs into AI-ready specs</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:0 0% 4%;--fg:0 0% 96%;--card:240 5% 8%;--muted:240 4% 12%;
+  --muted-fg:0 0% 55%;--accent:248 76% 63%;--accent-fg:0 0% 100%;
+  --border:240 5% 14%;--orange:18 100% 60%;--green:158 100% 42%;
+  --radius:0.85rem;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:radial-gradient(ellipse 66% 46% at 9% 0,rgba(108,92,231,.08),transparent 72%),
+             radial-gradient(ellipse 50% 35% at 90% 11%,rgba(255,107,53,.05),transparent 74%),
+             #0a0a0a;
+  color:hsl(var(--fg));line-height:1.6;min-height:100vh;
+}
+h1,h2,h3{font-family:'Space Grotesk',system-ui,sans-serif}
+.container{width:100%;max-width:1400px;margin:0 auto;padding:0 1.25rem}
+header{position:sticky;top:0;z-index:50;border-bottom:1px solid hsl(var(--border)/.5);
+  background:hsl(var(--card)/.7);backdrop-filter:blur(24px)}
+.header-inner{display:flex;height:4rem;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:.5rem;font-size:1.125rem;font-weight:600;
+  text-decoration:none;color:hsl(var(--fg))}
+.logo svg{height:2rem;width:2rem;border-radius:.375rem}
+nav{display:none;gap:1.5rem;font-size:.875rem}
+@media(min-width:768px){nav{display:flex}}
+nav a{color:hsl(var(--muted-fg));text-decoration:none;transition:color .2s}
+nav a:hover{color:hsl(var(--fg))}
+.header-actions{display:flex;gap:.5rem;align-items:center}
+@media(min-width:640px){.header-actions{gap:.75rem}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  font-size:.875rem;font-weight:500;border-radius:calc(var(--radius) - 2px);
+  border:none;cursor:pointer;transition:all .2s;text-decoration:none;white-space:nowrap}
+.btn:focus-visible{outline:2px solid hsl(var(--accent));outline-offset:2px}
+.btn-ghost{background:transparent;color:hsl(var(--fg))}
+.btn-ghost:hover{background:hsl(var(--muted))}
+.btn-primary{background:hsl(var(--accent));color:#fff}
+.btn-primary:hover{background:hsl(var(--accent)/.9);transform:scale(1.02);
+  box-shadow:0 0 20px rgba(108,92,231,.3)}
+.btn-outline{border:1px solid hsl(var(--border));background:hsl(var(--card));color:hsl(var(--fg))}
+.btn-outline:hover{background:hsl(var(--muted))}
+.btn-white{background:#fff;color:hsl(var(--accent))}
+.btn-white:hover{background:rgba(255,255,255,.9);transform:scale(1.02)}
+.h-9{height:2.25rem;padding:0 .75rem}
+.h-11{height:2.75rem;padding:0 2rem}
+
+.hero{position:relative;padding:6rem 0 8rem;text-align:center;overflow:hidden;min-height:700px;
+  background:#0a0a0a}
+.hero-grid{position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(108,92,231,.07) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(108,92,231,.07) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 30%,transparent 80%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 30%,transparent 80%);
+  z-index:0}
+.hero-orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.5;z-index:0}
+.hero-orb-1{top:-10%;left:10%;width:500px;height:500px;
+  background:radial-gradient(circle,rgba(108,92,231,.4),transparent 70%);
+  animation:orbFloat1 12s ease-in-out infinite}
+.hero-orb-2{top:20%;right:-5%;width:400px;height:400px;
+  background:radial-gradient(circle,rgba(255,107,53,.3),transparent 70%);
+  animation:orbFloat2 15s ease-in-out infinite}
+.hero-orb-3{bottom:-10%;left:30%;width:450px;height:450px;
+  background:radial-gradient(circle,rgba(108,92,231,.25),transparent 70%);
+  animation:orbFloat3 18s ease-in-out infinite}
+@keyframes orbFloat1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(50px,30px) scale(1.1)}}
+@keyframes orbFloat2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,50px) scale(1.15)}}
+@keyframes orbFloat3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-40px) scale(1.05)}}
+.hero-particles{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.particle{position:absolute;border-radius:50%;
+  background:radial-gradient(circle,rgba(108,92,231,.8),rgba(108,92,231,0));
+  animation:particleFloat linear infinite}
+@keyframes particleFloat{
+  0%{transform:translateY(100vh) translateX(0) scale(0);opacity:0}
+  10%{opacity:1;transform:translateY(90vh) translateX(10px) scale(1)}
+  90%{opacity:1}
+  100%{transform:translateY(-10vh) translateX(-10px) scale(0);opacity:0}
+}
+.hero-overlay{position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%,transparent 0%,rgba(10,10,10,.4) 60%,rgba(10,10,10,.85) 100%);
+  z-index:2}
+.hero-bottom-fade{position:absolute;bottom:0;left:0;right:0;height:300px;
+  background:linear-gradient(to bottom,transparent 0%,rgba(10,10,10,.3) 30%,rgba(10,10,10,.7) 60%,rgba(10,10,10,.95) 85%,#0a0a0a 100%);
+  z-index:2;pointer-events:none}
+.hero .container{position:relative;z-index:3}
+.hero h1{font-size:2.5rem;font-weight:700;letter-spacing:-.025em;line-height:1.1;
+  font-family:'Space Grotesk',system-ui,sans-serif}
+@media(min-width:768px){.hero h1{font-size:3.75rem}}
+.hero h1 .accent{color:hsl(var(--accent))}
+.hero p.lead{margin-top:1.25rem;font-size:1.125rem;color:hsl(var(--muted-fg));
+  max-width:42rem;margin-left:auto;margin-right:auto}
+.hero-ctas{margin-top:2rem;display:flex;flex-direction:column;gap:.75rem;
+  align-items:center;padding:0 1rem}
+@media(min-width:640px){.hero-ctas{flex-direction:row;justify-content:center;padding:0}}
+.hero-ctas .btn{width:100%}
+@media(min-width:640px){.hero-ctas .btn{width:auto}}
+.hero-note{margin-top:1rem;font-size:.875rem;color:hsl(var(--muted-fg))}
+.scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);
+  z-index:3;display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  color:hsl(var(--muted-fg));font-size:.75rem;opacity:.7}
+.scroll-indicator .mouse{width:1.5rem;height:2.5rem;border:2px solid hsl(var(--muted-fg));
+  border-radius:1rem;position:relative}
+.scroll-indicator .mouse::after{content:'';position:absolute;top:.5rem;left:50%;
+  transform:translateX(-50%);width:2px;height:6px;background:hsl(var(--muted-fg));
+  border-radius:1px;animation:scrollDown 1.5s ease-in-out infinite}
+@keyframes scrollDown{0%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,8px)}}
+
+.section{padding:5rem 0}
+.section-header{text-align:center;margin-bottom:2.5rem}
+.badge{display:inline-flex;align-items:center;border-radius:9999px;
+  background:hsl(var(--card));border:1px solid hsl(var(--border));
+  padding:.375rem .875rem;font-size:.75rem;font-weight:600;color:hsl(var(--fg))}
+.section-header h2{margin-top:.75rem;font-size:1.875rem;font-weight:700;letter-spacing:-.025em;
+  font-family:'Space Grotesk',system-ui,sans-serif}
+@media(min-width:768px){.section-header h2{font-size:3rem}}
+.section-header p{margin-top:.75rem;max-width:42rem;margin:0 auto;color:hsl(var(--muted-fg))}
+
+.comparison-wrap{max-width:64rem;margin:0 auto;border-radius:1rem;
+  border:1px solid hsl(var(--border));background:hsl(var(--card));overflow:hidden}
+.comparison-bar{display:flex;align-items:center;gap:.5rem;
+  border-bottom:1px solid hsl(var(--border));padding:.75rem 1rem;background:hsl(var(--card))}
+.dot{height:.75rem;width:.75rem;border-radius:9999px}
+.dot-r{background:rgba(239,68,68,.8)}.dot-y{background:rgba(234,179,8,.8)}.dot-g{background:rgba(34,197,94,.8)}
+.comparison-bar span.ml{margin-left:.5rem;font-size:.75rem;color:hsl(var(--muted-fg))}
+.slider{position:relative;aspect-ratio:16/10;width:100%;cursor:col-resize;
+  user-select:none;overflow:hidden;background:hsl(var(--muted))}
+.slider img{position:absolute;inset:0;height:100%;width:100%;object-fit:cover;object-position:top}
+.slider .label{position:absolute;top:1rem;padding:.375rem .875rem;border-radius:9999px;
+  font-size:.75rem;font-weight:600;color:#fff;z-index:10}
+.label-before{left:1rem;background:rgba(239,68,68,.9)}
+.label-after{right:1rem;background:hsl(var(--accent))}
+.slider .handle{position:absolute;top:0;bottom:0;width:2px;background:#fff;
+  box-shadow:0 0 8px rgba(0,0,0,.3);z-index:10;transform:translateX(-50%)}
+.slider .handle-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  height:2.5rem;width:2.5rem;border-radius:9999px;border:2px solid #fff;
+  background:hsl(var(--accent));display:grid;place-items:center;
+  box-shadow:0 10px 15px -3px rgba(0,0,0,.1)}
+.slider .handle-btn svg{height:1rem;width:1rem;color:#fff}
+.comparison-note{margin-top:1rem;text-align:center;font-size:.875rem;color:hsl(var(--muted-fg))}
+
+.steps-grid{max-width:64rem;margin:0 auto;display:grid;gap:1rem;position:relative}
+@media(min-width:768px){.steps-grid{grid-template-columns:repeat(3,1fr)}}
+.step-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;padding:0 .25rem}
+.step-num{display:inline-flex;height:2rem;width:2rem;align-items:center;justify-content:center;
+  border-radius:.5rem;background:hsl(var(--accent));font-size:.75rem;font-weight:700;color:#fff}
+.step-arrow{display:none;height:1rem;width:1rem;color:hsl(var(--muted-fg)/.4)}
+@media(min-width:768px){.step-arrow{display:block}}
+.step:last-child .step-arrow{display:none}
+.step-card{height:100%;border-radius:1rem;border:1px solid hsl(var(--border)/.6);
+  background:hsl(var(--card));padding:1.75rem;transition:border-color .15s}
+.step-card:hover{border-color:hsl(var(--accent)/.3)}
+.step-icon{margin-bottom:1rem;display:grid;height:2.5rem;width:2.5rem;place-items:center;
+  border-radius:.5rem;background:hsl(var(--accent)/.1);color:hsl(var(--accent))}
+.step-card h3{font-size:1.25rem;font-weight:600;margin-bottom:.5rem;
+  font-family:'Space Grotesk',system-ui,sans-serif}
+.step-card p{font-size:.875rem;color:hsl(var(--muted-fg));line-height:1.625}
+
+.features-grid{display:grid;gap:1.25rem;margin-bottom:2.5rem}
+@media(min-width:768px){.features-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1024px){.features-grid{grid-template-columns:repeat(3,1fr)}}
+.feature-card-wrap{border-radius:1rem;padding:1px;
+  background:linear-gradient(to bottom,hsl(var(--accent)/.4),hsl(var(--accent)/.1),transparent);
+  transition:box-shadow .3s}
+.feature-card-wrap:hover{box-shadow:0 0 60px -15px rgba(108,89,232,.3)}
+.feature-card-wrap.orange{background:linear-gradient(to bottom,hsl(var(--orange)/.4),hsl(var(--orange)/.1),transparent)}
+.feature-card-wrap.orange:hover{box-shadow:0 0 60px -15px rgba(255,112,51,.3)}
+.feature-card-wrap.green{background:linear-gradient(to bottom,hsl(var(--green)/.4),hsl(var(--green)/.1),transparent)}
+.feature-card-wrap.green:hover{box-shadow:0 0 60px -15px rgba(0,214,136,.3)}
+.feature-card{display:flex;height:100%;flex-direction:column;border-radius:calc(1rem - 1px);
+  background:hsl(var(--card));padding:1.5rem}
+.feature-icon{margin-bottom:1rem;display:grid;height:2.5rem;width:2.5rem;place-items:center;
+  border-radius:.5rem;background:hsl(var(--accent)/.15);color:hsl(var(--accent));transition:transform .2s}
+.feature-card-wrap:hover .feature-icon{transform:scale(1.1)}
+.feature-card-wrap.orange .feature-icon{background:hsl(var(--orange)/.15);color:hsl(var(--orange))}
+.feature-card-wrap.green .feature-icon{background:hsl(var(--green)/.15);color:hsl(var(--green))}
+.feature-card h3{font-size:1.125rem;font-weight:600;margin-bottom:.5rem;
+  font-family:'Space Grotesk',system-ui,sans-serif}
+.feature-card p{font-size:.875rem;color:hsl(var(--muted-fg));line-height:1.625}
+
+.divider{margin:2.5rem auto;height:1px;width:6rem;
+  background:linear-gradient(to right,transparent,hsl(var(--border)),transparent)}
+.mini-grid{display:grid;gap:1rem;grid-template-columns:repeat(1,1fr)}
+@media(min-width:640px){.mini-grid{grid-template-columns:repeat(3,1fr)}}
+.mini-card{display:flex;align-items:center;gap:1rem;border-radius:.75rem;
+  border:1px solid hsl(var(--border)/.6);background:hsl(var(--card));padding:1.25rem;transition:all .2s}
+.mini-card:hover{border-color:hsl(var(--accent)/.2)}
+.mini-icon{height:2rem;width:2rem;flex-shrink:0;place-items:center;border-radius:.375rem;
+  background:hsl(var(--accent)/.1);color:hsl(var(--accent));display:grid}
+.mini-card p{font-size:.875rem;font-weight:500;margin-bottom:.125rem}
+.mini-card span{font-size:.75rem;color:hsl(var(--muted-fg));line-height:1.5;display:block}
+
+.audience-grid{display:grid;gap:1.25rem}
+@media(min-width:768px){.audience-grid{grid-template-columns:repeat(3,1fr)}}
+.audience-card{height:100%;border-radius:1rem;border:1px solid hsl(var(--border));
+  background:hsl(var(--card));transition:all .2s;overflow:hidden}
+.audience-card:hover{border-color:hsl(var(--accent)/.3)}
+.audience-head{padding:1.5rem 1.5rem .5rem}
+.audience-icon{margin-bottom:.75rem;display:grid;height:2.5rem;width:2.5rem;place-items:center;
+  border-radius:.5rem;background:hsl(var(--accent)/.1);color:hsl(var(--accent))}
+.audience-card h3{font-size:1.125rem;font-weight:600;margin-bottom:.5rem;
+  font-family:'Space Grotesk',system-ui,sans-serif}
+.audience-body{padding:0 1.5rem 1.5rem}
+.audience-body p{font-size:.875rem;color:hsl(var(--muted-fg));line-height:1.625}
+
+.testimonials-grid{display:grid;gap:1.25rem;grid-template-columns:1fr}
+@media(min-width:768px){.testimonials-grid{grid-template-columns:repeat(2,1fr)}}
+.testimonial{border-radius:1rem;border:1px solid hsl(var(--border));
+  background:hsl(var(--card));padding:1.5rem;color:inherit;transition:border-color .15s}
+.testimonial:hover{border-color:hsl(var(--accent)/.3)}
+.t-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.t-user{display:flex;align-items:center;gap:.75rem}
+.t-avatar{height:2.5rem;width:2.5rem;border-radius:9999px;background:hsl(var(--muted));
+  display:grid;place-items:center;font-weight:600;font-size:.875rem;color:#fff;flex-shrink:0;overflow:hidden}
+.t-avatar img{width:100%;height:100%;object-fit:cover}
+.t-name{font-size:.875rem;font-weight:600}
+.t-handle{font-size:.75rem;color:hsl(var(--muted-fg))}
+.t-x{height:1rem;width:1rem;flex-shrink:0;color:hsl(var(--muted-fg))}
+.testimonial p{font-size:.875rem;color:hsl(var(--muted-fg));line-height:1.625}
+
+.stats-note{margin:2rem 0 1.5rem;text-align:center;color:hsl(var(--muted-fg));font-size:.875rem}
+.stats-grid{max-width:64rem;margin:0 auto;display:grid;gap:.75rem;grid-template-columns:repeat(2,1fr)}
+@media(min-width:768px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
+.stat{display:flex;align-items:center;gap:.75rem;border-radius:.75rem;
+  border:1px solid hsl(var(--border)/.6);background:hsl(var(--card));padding:1rem 1.25rem;
+  text-decoration:none;color:inherit;transition:border-color .15s}
+.stat:hover{border-color:hsl(var(--accent)/.3)}
+.stat-icon{height:1.5rem;width:1.5rem;flex-shrink:0}
+.stat-val{font-size:1.125rem;font-weight:700}
+.stat-lbl{font-size:.75rem;color:hsl(var(--muted-fg))}
+
+.video-wrap{max-width:64rem;margin:0 auto;border-radius:1rem;border:1px solid hsl(var(--border));
+  overflow:hidden;box-shadow:0 0 80px -20px rgba(108,89,232,.3)}
+.video-btn{position:relative;display:block;width:100%;aspect-ratio:16/9;
+  cursor:pointer;background:hsl(var(--card));border:none}
+.video-btn img{height:100%;width:100%;object-fit:cover}
+.video-btn .overlay{position:absolute;inset:0;display:grid;place-items:center;
+  background:rgba(0,0,0,.3);transition:background .2s}
+.video-btn:hover .overlay{background:rgba(0,0,0,.4)}
+.play-btn{display:grid;height:4rem;width:4rem;place-items:center;border-radius:9999px;
+  background:hsl(var(--accent));color:#fff;box-shadow:0 10px 15px -3px rgba(0,0,0,.1);transition:transform .2s}
+.video-btn:hover .play-btn{transform:scale(1.1)}
+.play-btn svg{height:1.75rem;width:1.75rem;fill:currentColor;margin-left:.125rem}
+
+.faq-wrap{max-width:48rem;margin:0 auto}
+.faq-wrap h2{font-size:1.875rem;font-weight:700;letter-spacing:-.025em;margin-bottom:1.5rem;
+  font-family:'Space Grotesk',system-ui,sans-serif}
+.faq-list{border-radius:1rem;border:1px solid hsl(var(--border));background:hsl(var(--card));overflow:hidden}
+.faq-item{border-bottom:1px solid hsl(var(--border))}
+.faq-item:last-child{border-bottom:none}
+.faq-q{display:flex;flex:1;align-items:center;justify-content:space-between;
+  padding:1.25rem 1.5rem;background:none;color:hsl(var(--fg));
+  font-size:.875rem;font-weight:500;text-align:left;cursor:pointer;width:100%;transition:background .15s}
+.faq-q:hover{background:hsl(var(--muted)/.3)}
+.faq-q svg{height:1rem;width:1rem;flex-shrink:0;color:hsl(var(--muted-fg));transition:transform .2s}
+.faq-item.open .faq-q svg{transform:rotate(180deg)}
+.faq-a{overflow:hidden;max-height:0;transition:max-height .3s ease-out}
+.faq-item.open .faq-a{max-height:500px}
+.faq-a-inner{padding:0 1.5rem 1.25rem;font-size:.875rem;color:hsl(var(--muted-fg));line-height:1.625}
+
+.cta{margin:0 1rem 3rem;border-radius:1rem;
+  background:linear-gradient(135deg,hsl(var(--accent)),hsl(var(--accent)/.9),hsl(var(--orange)/.6));
+  padding:4rem 1.5rem;color:#fff;text-align:center}
+@media(min-width:768px){.cta{margin:0 2rem 3rem}}
+.cta h2{font-size:2.25rem;font-weight:700;letter-spacing:-.025em;
+  font-family:'Space Grotesk',system-ui,sans-serif}
+@media(min-width:768px){.cta h2{font-size:2.5rem}}
+.cta>p{margin-top:.75rem;color:rgba(255,255,255,.8)}
+.cta .btn-wrap{margin-top:1.5rem}
+.cta .note{margin-top:.75rem;font-size:.875rem;color:rgba(255,255,255,.6)}
+
+footer{border-top:1px solid hsl(var(--border));background:hsl(var(--card)/.6);padding:2rem 0}
+.footer-inner{display:flex;flex-direction:column;gap:1rem;font-size:.875rem;color:hsl(var(--muted-fg))}
+@media(min-width:768px){.footer-inner{flex-direction:row;align-items:center;justify-content:space-between}}
+.footer-brand{display:flex;align-items:center;gap:.5rem;color:hsl(var(--fg))}
+.footer-brand svg{height:1.75rem;width:1.75rem;border-radius:.375rem}
+.footer-links{display:flex;flex-wrap:wrap;align-items:center;gap:1rem}
+.footer-links a{color:hsl(var(--muted-fg));text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:hsl(var(--fg))}
+.footer-links .x-icon{display:inline-flex}
+.footer-links .x-icon svg{height:1rem;width:1rem}
+
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.icon{height:1.25rem;width:1.25rem}.icon-sm{height:1rem;width:1rem}
+</style>
+</head>
+<body>
+<header>
+<div class="container"><div class="header-inner">
+<a href="#" class="logo">
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+<rect width="512" height="512" rx="64" fill="#0A0A0A"/>
+<g transform="translate(106,120)">
+<path d="M0 56L0 0L75 56L150 0L225 56L300 0L300 56L225 112L150 56L75 112Z" fill="#A599F0" opacity=".6"/>
+<path d="M0 126L0 70L75 126L150 70L225 126L300 70L300 126L225 182L150 126L75 182Z" fill="#8474E8" opacity=".8"/>
+<path d="M0 196L0 140L75 196L150 140L225 196L300 140L300 196L225 252L150 196L75 252Z" fill="#6C5CE7"/>
+</g></svg>Morphen</a>
+<nav><a href="#features">Product</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></nav>
+<div class="header-actions">
+<button class="btn btn-ghost h-9" id="signInBtn" style="display:none">Sign In</button>
+<button class="btn btn-primary h-9">Get Started Free</button>
+</div></div></div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <div class="hero-particles" id="heroParticles"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-bottom-fade"></div>
+  <div class="container">
+    <h1>Your AI is guessing.<br><span class="accent">Give it a blueprint.</span></h1>
+    <p class="lead">Upload any design. Morphen generates an implementation spec so detailed, your AI tool builds it right the first time.</p>
+    <div class="hero-ctas">
+      <button class="btn btn-primary h-11">Get Started Free
+        <svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <a href="#demo" class="btn btn-outline h-11">Watch the Demo</a>
+    </div>
+    <p class="hero-note">Free tier. No credit card required.</p>
+  </div>
+  <div class="scroll-indicator">
+    <div class="mouse"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<section class="section">
+<div class="container">
+<div class="section-header">
+<div class="badge">Before & After</div>
+<h2>Same design. One prompt actually works.</h2>
+<p>Drag to compare what a generic prompt produces vs. what Morphen's spec delivers.</p>
+</div>
+<div class="comparison-wrap">
+<div class="comparison-bar">
+<span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+<span class="ml">Drag to compare</span>
+</div>
+<div class="slider" id="slider">
+<img src="https://image.qwenlm.ai/public_source/ac6f6059-18e8-432b-bac8-ec059bb0015a/1248e4e77-1892-409d-9754-faf878f7db0f.png" alt="Website generated with Morphen spec" draggable="false">
+<div id="beforeClip" style="position:absolute;inset:0;overflow:hidden;width:50%">
+<img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=750&fit=crop" alt="Website generated with a generic prompt" draggable="false" style="width:100%;max-width:none">
+<span class="label label-before">Generic Prompt</span>
+</div>
+<span class="label label-after">Morphen Spec</span>
+<div class="handle" id="handle" style="left:50%">
+<div class="handle-btn">
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 8H12M4 8L6 6M4 8L6 10M12 8L10 6M12 8L10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</div></div>
+</div></div>
+<p class="comparison-note">Left: "Build this landing page" → 60% match. Right: Morphen's spec → 95% match.</p>
+</div>
+</section>
+
+<section class="section" id="how-it-works">
+<div class="container">
+<div class="section-header">
+<div class="badge">How it works</div>
+<h2>Three steps. That's the whole workflow.</h2>
+</div>
+<div class="steps-grid">
+<div class="reveal">
+<div class="step-head"><span class="step-num">01</span>
+<svg class="step-arrow" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+<div class="step-card">
+<div class="step-icon"><svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg></div>
+<h3>Upload</h3><p>Drop in a screenshot, Figma export, Dribbble shot. Any visual works.</p>
+</div></div>
+<div class="reveal">
+<div class="step-head"><span class="step-num">02</span>
+<svg class="step-arrow" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+<div class="step-card">
+<div class="step-icon"><svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.3-4.3"/></svg></div>
+<h3>Analyze</h3><p>Morphen breaks down layout, spacing, hierarchy, responsive behavior, and visual patterns.</p>
+</div></div>
+<div class="reveal">
+<div class="step-head"><span class="step-num">03</span></div>
+<div class="step-card">
+<div class="step-icon"><svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+<h3>Build</h3><p>Paste the spec into Cursor, Claude Code, Lovable, or Bolt. Get a 95% match instead of 60%.</p>
+</div></div>
+</div></div>
+</section>
+
+<section class="section" id="features">
+<div class="container">
+<div class="section-header">
+<div class="badge">What it actually sees</div>
+<h2>Every pixel, mapped and understood.</h2>
+<p>Not a chatbot guess. A structural breakdown of layout, hierarchy, spacing, and responsive behavior.</p>
+</div>
+<div class="features-grid">
+<div class="feature-card-wrap reveal">
+<div class="feature-card">
+<div class="feature-icon"><svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2"/><circle cx="12" cy="12" r="3"/><path d="M16 16l-1.9-1.9"/></svg></div>
+<h3>Design-aware analysis</h3>
+<p>Layout grid, visual hierarchy, spacing tokens, overlap logic, color relationships. A structural breakdown of what's actually there.</p>
+</div></div>
+<div class="feature-card-wrap orange reveal">
+<div class="feature-card">
+<div class="feature-icon"><svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 7L8.7 2.7a2.41 2.41 0 00-3.4 0L2.7 5.3a2.41 2.41 0 000 3.4L7 13M8 6l2-2M18 16l2-2M17 11l4.3 4.3c.94.94.94 2.46 0 3.4l-2.6 2.6c-.94.94-2.46.94-3.4 0L11 17"/></svg></div>
+<h3>Editable specs</h3>
+<p>Read the output. Change what matters. Remove what doesn't. You control what gets handed to the AI.</p>
+</div></div>
+<div class="feature-card-wrap green reveal">
+<div class="feature-card">
+<div class="feature-icon"><svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg></div>
+<h3>Responsive by default</h3>
+<p>Breakpoints, reflow behavior, stacking order. No more three rounds of 'make it responsive.'</p>
+</div></div>
+</div>
+<div class="divider"></div>
+<div class="mini-grid">
+<div class="mini-card reveal">
+<div class="mini-icon"><svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 20h16a2 2 0 002-2V8a2 2 0 00-2-2h-7.93a2 2 0 01-1.66-.9l-.82-1.2A2 2 0 007.93 3H4a2 2 0 00-2 2v13c0 1.1.9 2 2 2Z"/><path d="M8 10v4M12 10v2M16 10v6"/></svg></div>
+<div><p>Prompt library</p><span>Save and revisit prompts with references.</span></div>
+</div>
+<div class="mini-card reveal">
+<div class="mini-icon"><svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 22H4a2 2 0 01-2-2V6"/><path d="M22 13l-1.296-1.296a2.41 2.41 0 00-3.408 0L11 18"/><circle cx="12" cy="8" r="2"/><rect width="16" height="16" x="6" y="2" rx="2"/></svg></div>
+<div><p>Multi-image projects</p><span>Upload multiple screens for richer context.</span></div>
+</div>
+<div class="mini-card reveal">
+<div class="mini-icon"><svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7Z"/><path d="M14 2v4a2 2 0 002 2h4"/><path d="M12 18v-6M9 15l3 3 3-3"/></svg></div>
+<div><p>Export as markdown</p><span>Clean markdown for docs and handoff.</span></div>
+</div>
+</div></div>
+</section>
+
+<section class="section">
+<div class="container">
+<div class="section-header">
+<div class="badge">Who it's for</div>
+<h2>Built for people who ship</h2>
+</div>
+<div class="audience-grid">
+<div class="audience-card reveal">
+<div class="audience-head">
+<div class="audience-icon"><svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 16l4-4-4-4M6 8l-4 4 4 4M14.5 4l-5 16"/></svg></div>
+<h3>Developers</h3>
+</div>
+<div class="audience-body"><p>You know what you want to build. Upload the design, get the spec, paste it, ship it.</p></div>
+</div>
+<div class="audience-card reveal">
+<div class="audience-head">
+<div class="audience-icon"><svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg></div>
+<h3>Designers</h3>
+</div>
+<div class="audience-body"><p>Morphen translates design intent into implementation language the AI can understand.</p></div>
+</div>
+<div class="audience-card reveal">
+<div class="audience-head">
+<div class="audience-icon"><svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 20V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg></div>
+<h3>Agencies & Freelancers</h3>
+</div>
+<div class="audience-body"><p>Client sends a reference. Now it takes 30 seconds. Bill for the build, not the setup.</p></div>
+</div>
+</div></div>
+</section>
+
+<section class="section" id="pricing">
+<div class="container">
+<div class="section-header">
+<div class="badge">Pricing</div>
+<h2>Simple pricing</h2>
+<p>Start free. Upgrade when it saves you hours.</p>
+</div>
+</div>
+</section>
+
+<section class="section" id="social-proof">
+<div class="container">
+<div class="section-header">
+<div class="badge">Social Proof</div>
+<h2>Built from the workflow that reached millions</h2>
+<p>The spec-driven development methodology behind Morphen started as viral posts on X.</p>
+</div>
+<div class="testimonials-grid">
+<div class="testimonial reveal">
+<div class="t-head"><div class="t-user">
+<div class="t-avatar" style="background:#6c5ce7">C</div>
+<div><div class="t-name">CIPHER</div><div class="t-handle">@infooperative</div></div>
+</div><svg class="t-x" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+<p>The skill is the specification. Not the prompt. Most people give claude vague briefs and get vague outputs.</p>
+</div>
+<div class="testimonial reveal">
+<div class="t-head"><div class="t-user">
+<div class="t-avatar" style="background:#ff6b35">R</div>
+<div><div class="t-name">robertus</div><div class="t-handle">@rtheoryxyz</div></div>
+</div><svg class="t-x" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+<p>The one-shot isn't the flex. The flex is that it'll iterate on feedback 30 more times without complaining.</p>
+</div>
+<div class="testimonial reveal">
+<div class="t-head"><div class="t-user">
+<div class="t-avatar" style="background:#00d68f">S</div>
+<div><div class="t-name">Saeed Anwar</div><div class="t-handle">@saen_dev</div></div>
+</div><svg class="t-x" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+<p>For 80% of UI? It's faster than most junior devs and doesn't argue about spacing.</p>
+</div>
+<div class="testimonial reveal">
+<div class="t-head"><div class="t-user">
+<div class="t-avatar" style="background:#6c5ce7">M</div>
+<div><div class="t-name">Mario Tomic</div><div class="t-handle">@mariotomich</div></div>
+</div><svg class="t-x" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+<p>Feels like everything took a huge leap over the last 2-3 months.</p>
+</div>
+<div class="testimonial reveal">
+<div class="t-head"><div class="t-user">
+<div class="t-avatar" style="background:#ff6b35">Z</div>
+<div><div class="t-name">z_aqua</div><div class="t-handle">@z_aqua_</div></div>
+</div><svg class="t-x" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+<p>One of the best page physics I have seen in a very long time.</p>
+</div>
+<div class="testimonial reveal">
+<div class="t-head"><div class="t-user">
+<div class="t-avatar" style="background:#00d68f">V</div>
+<div><div class="t-name">Vello</div><div class="t-handle">@vello01</div></div>
+</div><svg class="t-x" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></div>
+<p>This is so good that it needs more than vibe coding. I'll call it vibe crafting.</p>
+</div>
+</div>
+<p class="stats-note">Built by JavaScript Mastery — trusted by 1M+ developers</p>
+<div class="stats-grid reveal">
+<a href="#" class="stat">
+<svg class="stat-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:hsl(var(--accent))"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+<div><div class="stat-val">1M+</div><div class="stat-lbl">Developers helped</div></div>
+</a>
+<a href="#" class="stat">
+<svg class="stat-icon" fill="currentColor" style="color:#ef4444"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+<div><div class="stat-val">1.1M</div><div class="stat-lbl">YouTube subscribers</div></div>
+</a>
+<a href="#" class="stat">
+<svg class="stat-icon" fill="currentColor" style="color:#10b981"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+<div><div class="stat-val">2,800+</div><div class="stat-lbl"><span style="color:#10b981;font-weight:500">4.8 ·</span> Trustpilot reviews</div></div>
+</a>
+<a href="#" class="stat">
+<svg class="stat-icon" fill="currentColor" style="color:#fbbf24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+<div><div class="stat-val">3x</div><div class="stat-lbl">GitHub Star</div></div>
+</a>
+</div></div>
+</section>
+
+<section class="section" id="demo">
+<div class="container">
+<div class="section-header">
+<div class="badge">Demo</div>
+<h2>See what one spec can build</h2>
+<p>The viral Slam Dunk website — built from a single Morphen spec.</p>
+</div>
+<div class="video-wrap reveal">
+<button class="video-btn" id="videoBtn">
+<img src="https://image.qwenlm.ai/public_source/ac6f6059-18e8-432b-bac8-ec059bb0015a/1248e4e77-1892-409d-9754-faf878f7db0f.png" alt="Demo">
+<div class="overlay"><div class="play-btn">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+</div></div>
+</button></div>
+</div>
+</section>
+
+<section class="section" id="faq" style="padding-top:2.5rem;padding-bottom:6rem">
+<div class="container">
+<div class="faq-wrap">
+<h2>Questions</h2>
+<div class="faq-list">
+<div class="faq-item"><button class="faq-q"><span>How is this different from just pasting a screenshot into ChatGPT?</span>
+<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+<div class="faq-a"><div class="faq-a-inner">ChatGPT gives a generic description. Morphen provides a structured implementation spec with exact spacing, layout grids, and responsive breakpoints.</div></div></div>
+<div class="faq-item"><button class="faq-q"><span>What AI tools does the output work with?</span>
+<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+<div class="faq-a"><div class="faq-a-inner">Cursor, Claude Code, Lovable, Bolt, and any AI coding assistant.</div></div></div>
+<div class="faq-item"><button class="faq-q"><span>Can I upload multiple screens?</span>
+<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+<div class="faq-a"><div class="faq-a-inner">Yes! Upload multiple screens for richer context about your design system.</div></div></div>
+<div class="faq-item"><button class="faq-q"><span>Do you store my designs?</span>
+<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+<div class="faq-a"><div class="faq-a-inner">Your designs are processed securely and not stored permanently.</div></div></div>
+<div class="faq-item"><button class="faq-q"><span>What if the generated spec isn't perfect?</span>
+<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+<div class="faq-a"><div class="faq-a-inner">Specs are fully editable. You're always in control.</div></div></div>
+<div class="faq-item"><button class="faq-q"><span>Is there a free tier?</span>
+<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+<div class="faq-a"><div class="faq-a-inner">Yes! Start free. No credit card required.</div></div></div>
+</div></div></div>
+</section>
+
+<section class="cta">
+<div class="container">
+<h2>Your next project starts with a screenshot.</h2>
+<p>Upload a design. Get a real spec. Free.</p>
+<div class="btn-wrap"><button class="btn btn-white h-11">Get Started Free
+<svg class="icon-sm" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+<p class="note">No credit card. No setup. Just upload.</p>
+</div>
+</section>
+</main>
+
+<footer>
+<div class="container"><div class="footer-inner">
+<div class="footer-brand">
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+<rect width="512" height="512" rx="64" fill="#0A0A0A"/>
+<g transform="translate(106,120)">
+<path d="M0 56L0 0L75 56L150 0L225 56L300 0L300 56L225 112L150 56L75 112Z" fill="#A599F0" opacity=".6"/>
+<path d="M0 126L0 70L75 126L150 70L225 126L300 70L300 126L225 182L150 126L75 182Z" fill="#8474E8" opacity=".8"/>
+<path d="M0 196L0 140L75 196L150 140L225 196L300 140L300 196L225 252L150 196L75 252Z" fill="#6C5CE7"/>
+</g></svg>
+<span>© 2026 Morphen</span>
+</div>
+<div class="footer-links">
+<a href="#features">Product</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+<a href="#">Terms</a><a href="#">Privacy</a>
+<a href="#" class="x-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+</div></div></div>
+</footer>
+
+<script>
+(function(){
+  var container = document.getElementById('heroParticles');
+  if(!container) return;
+  for(var i = 0; i < 25; i++){
+    var p = document.createElement('div');
+    p.className = 'particle';
+    var size = Math.random() * 4 + 2;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.opacity = Math.random() * 0.5 + 0.3;
+    container.appendChild(p);
+  }
+})();
+(function(){
+  var slider=document.getElementById('slider'),handle=document.getElementById('handle'),
+      clip=document.getElementById('beforeClip'),dragging=false;
+  function update(x){
+    var r=slider.getBoundingClientRect(),p=Math.max(0,Math.min(1,(x-r.left)/r.width));
+    handle.style.left=(p*100)+'%';clip.style.width=(p*100)+'%';
+  }
+  slider.addEventListener('mousedown',function(e){dragging=true;update(e.clientX)});
+  document.addEventListener('mousemove',function(e){if(dragging)update(e.clientX)});
+  document.addEventListener('mouseup',function(){dragging=false});
+  slider.addEventListener('touchstart',function(e){dragging=true;update(e.touches[0].clientX)},{passive:true});
+  slider.addEventListener('touchmove',function(e){if(dragging){e.preventDefault();update(e.touches[0].clientX)}},{passive:false});
+  slider.addEventListener('touchend',function(){dragging=false});
+})();
+(function(){
+  document.querySelectorAll('.faq-item').forEach(function(item){
+    item.querySelector('.faq-q').addEventListener('click',function(){
+      var open=item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(i){i.classList.remove('open')});
+      if(!open)item.classList.add('open');
+    });
+  });
+})();
+(function(){
+  var els=document.querySelectorAll('.reveal'),
+      obs=new IntersectionObserver(function(entries){
+        entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}});
+      },{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
+  els.forEach(function(el){obs.observe(el)});
+})();
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var id=this.getAttribute('href');
+    if(id.length>1){var t=document.querySelector(id);if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'})}}
+  });
+});
+document.getElementById('videoBtn').addEventListener('click',function(){alert('Video player would open here.')});
+(function(){
+  var btn=document.getElementById('signInBtn');
+  function upd(){btn.style.display=window.innerWidth>=768?'inline-flex':'none'}
+  upd();window.addEventListener('resize',upd);
+})();
+</script>
+</body>
+</html>
+
